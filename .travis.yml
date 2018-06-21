@@ -1,0 +1,27 @@
+sudo: false
+language: scala
+scala:
+- 2.12.6
+script:
+- sbt ++$TRAVIS_SCALA_VERSION test
+jdk:
+- oraclejdk8
+before_install:
+- if [ $TRAVIS_PULL_REQUEST = 'false' ]; then
+    openssl aes-256-cbc -K $encrypted_054593f98bbe_key -iv $encrypted_054593f98bbe_iv -in travis/secrets.tar.enc -out travis/secrets.tar -d;
+    tar xv -C travis -f travis/secrets.tar;
+  fi
+after_success:
+- if [ $TRAVIS_PULL_REQUEST = 'false' ]; then sbt ++$TRAVIS_SCALA_VERSION releaseEarly;
+  fi
+env:
+  global:
+  - secure: "OeYYLh22mZCePacBSQ0DGz9XdwssRwUD7VuDBLXPmBmqnJHub0QG1k26y+LJfOnIU25AO2cRDozTLncqmTqey82KFI1ajUz8ahyTWvrDnQmiGNAZbwQNeV2jjchyPTeiD3y21hQfWwY01v8i3BQs9JW0ypcicEJ9HfomIVaeWU3obZbBkxr1+ySx/T1xLwgDGRX/L4AGdMF3f2obLYWWKRE3AvytouMt4YB9Fbg/3pkdPB+JNlToCF577+vMmYT1Z0jHyR/K5q3Er6TQAP5SIXIdM8auwtsjQWnIXnuFu/MESX8+t1rrCqonEAVF/szt0rJqiaQIEmfPLchJVj9GIWhWMb39GPKfyQNZ1DpP/kGLZDV/LsTZua3WD8pRZkFjeefgy2ufUZtW9Sqr1OacmGGnIy4G1rKivJmy/I2YCAeEVnWzkhAMyXgRmyNLmIQAZtKUI9SZ0Cx67aZ2GimmaBopLyjfHAM6mHMMkcL0bT/Z0DB4ofug+8JgE5htsC/Ky7HPGhMMoGMtPCaqkA2s5DXmDnATf+mA0Z7S3XslZJn5xlXIKpz2xcDO1N0u09/4awL36i1L+DryxqTO4X4+VZfPNosrM1SngiAAhbUA6pF1g+zASBy/qQkvYrhdej+1eR1hE30iu7FOwr5hR+KYMYXq0iPabqksoVKIOP5TMk0="
+  - secure: "f+j7Y4NoLnOaY0yeztztGGLwBlJSgipYanpWLl0WcxIO4r0W2ylrXTeKS1wxcdwcWr6JCTauAUcgyY8j3ShyJPAptJB2bOEzdSeMCchSHtYYiM4FTirfjF8nOBTujZQ62x1vr0Q5Z377upq8VHxSG2ar0zcaWND3QDk9RSL6fmSENLNyjeo2GcsPbJdXv9Cv1/8RUgWwL1a7R2vVrQ1HUWbmAglANKMAO9zGpRlnzr07yIJay5wlYhMYbuzNkMzs0G7YOuc/gj/A/LgDj3z7ak+hM4ZG8YpjDZ0QrbiFuf6uDbwQ19iQa6a/7BgAu0DpdeeHN3lBxAAfZSTlNLB+C6MyYt9EjhM7rsN3qzkdAiwK1JEFRb2uLCIrN3TsfaDq+uLyZtOwxCPK5F2OlY/WMBfPYyVUu0e5vn/W/qDY7eE2y1mj2IzSVVK6kY4HQZYMwdT9MU+xmxaDRrNeqCc9ezuGg+cEhj2+B2cGOQlTrEaKxwJOpA+BRkA6ezrqeDd++tyhm27ZYwcsHgvEVCebq16xqs+Kb3HmHO1ePIO7601/5drUsAalG+0DyKmBFgzkGtJnIT/JB1m3KIYgtdDh8pm5ZN/i9b6S8uZNDUW+R5ixROAtmp59oCptOePu/+DYC9q8vpmhmRrmRxIhfEKo2ZXawSe0obbZOiNdlh/8/bE="
+  - secure: "cKpTGmZadc/ByS/QAMtXUWUeqpa9s1NzwU57yPZSi4EabKZ5ztbUlpTTpuABkfchPHsT/KnIoquMbHqKnbQsJ8dk847GkAvyt5MQOXGgNNMGVOvR+c8yKv+ROReHfxNCiQDzYlaUWAVwdfBcm3jkUzleH89HzB/tNfA+AobVx3xvos0utYkL4NqMNVpd9GMb5AyX6kE/92VL1hAOQOgLSfHmb/zEjYLfu1RDNdszKN0oXS4BFoH4pYMVKnxVHD38ifUZ5hzU8Uuep0EloaTqcabms1ersKaQhkZv/0GEhKXJ+Gidxk25faQVbaEc0+PHH5okGixArvThS7Q/YPQChgzFFq3a04ES1vUzqp5fQ9bO42gehzT2sD88nyFqCgxLzH8x8CLKW89c43mIwOMwmP21ltAJMtu6vREwUlqoqHsRLSi6W2z4QhT6T23fDa6wlhOPqeh+7kkijuPwu5jGg6PLEz7nWvmibn4qhxdyNXeUMfzDQH356zWyRoSl5ZqRfyBd3wAVILun0JsPN0cvqPPhjikT9vokyJClU0AEBWyc66nTTwORGwUT2lRbk+jhn9Nrd0006hGmFpuGsQLvSQDKqcNsTNmOHbfvjSca/d91DnraoJnRu/QNB2LY/tvrlRZMbFZ1CvzlziqHceVQEQp0ViK1RY+GyrZbjo5tIKc="
+
+cache:
+  directories:
+  - $HOME/.ivy2/cache
+  - $HOME/.sbt
+  - $HOME/.coursier

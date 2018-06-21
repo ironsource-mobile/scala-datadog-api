@@ -18,6 +18,16 @@ lazy val root = (project in file("."))
     libraryDependencies ++= (dependencies ++ testDependencies),
     sources in (Compile, doc) := List.empty)
 
+inThisBuild(List(
+  licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+  homepage := Some(url("https://github.com/SupersonicAds/scala-datadog-api")),
+  developers := List(Developer("SupersonicAds", "SupersonicAds", "SupersonicAds", url("https://github.com/SupersonicAds"))),
+  scmInfo := Some(ScmInfo(url("https://github.com/SupersonicAds/scala-datadog-api"), "scm:git:git@github.com:SupersonicAds/scala-datadog-api.git")),
+
+  pgpPublicRing := file("./travis/local.pubring.asc"),
+  pgpSecretRing := file("./travis/local.secring.asc"),
+  releaseEarlyEnableSyncToMaven := false,
+  releaseEarlyWith := BintrayPublisher))
 
 def dependencies = List(
   "com.beachape" %% "enumeratum" % "1.5.13", //TODO consider removing
