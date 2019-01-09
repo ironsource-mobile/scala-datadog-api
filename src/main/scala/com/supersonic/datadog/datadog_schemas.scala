@@ -21,7 +21,12 @@ case class TemplateVariable(name: String, prefix: String, default: Option[String
 object Graph {
   case class Definition(requests: List[Request],
                         visualization: Visualization,
-                        yAxis: Option[YAxis] = None)
+                        yAxis: Option[YAxis] = None,
+                        deployEvent: DeployEvent)//,
+
+  case class DeployEvent() {
+    def renderEvent = s"tag:service:{$???} sonic deploy"
+  }
 
   case class Request(series: List[Series],
                      style: Option[Style] = None,

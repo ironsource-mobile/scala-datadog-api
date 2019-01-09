@@ -1,12 +1,13 @@
 package com.supersonic.datadog
 
+import java.awt.Event
 import com.supersonic.datadog.Graph.LineType.{Dashed, Dotted, Solid}
 import com.supersonic.datadog.Graph.LineWidth.{Normal, Thick, Thin}
 import com.supersonic.datadog.Graph.Palette._
 import com.supersonic.datadog.Graph.Visualization._
 import com.supersonic.datadog.Graph.VisualizationType.{Areas, Bars, Lines}
 import com.supersonic.datadog.Graph.YAxis.Scale.{Linear, Log, Pow, SQRT}
-import com.supersonic.datadog.Graph.{Request, Visualization, VisualizationType, YAxis}
+import com.supersonic.datadog.Graph._
 import io.circe._
 import io.circe.syntax._
 
@@ -132,5 +133,10 @@ object TimeboardJSON {
     }
 
     Json.fromString(name)
+  }
+
+  implicit val eventOverlayEncoder: Encoder[DeployEvent] = Encoder.instance { deployEventOverlay =>
+    Json.obj(
+      "q" := deployEventOverlay.renderEvent.mkString(""))
   }
 }
