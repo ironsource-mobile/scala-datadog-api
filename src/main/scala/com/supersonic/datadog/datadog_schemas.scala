@@ -25,7 +25,7 @@ object Graph {
                         deployEvent: DeployEvent)//,
 
   case class DeployEvent() {
-    def renderEvent = s"tag:service:{$???} sonic deploy"
+    def renderEvent = s"tag:service:${???} sonic deploy"
   }
 
   case class Request(series: List[Series],

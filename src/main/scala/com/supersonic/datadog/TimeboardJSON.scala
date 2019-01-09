@@ -1,6 +1,5 @@
 package com.supersonic.datadog
 
-import java.awt.Event
 import com.supersonic.datadog.Graph.LineType.{Dashed, Dotted, Solid}
 import com.supersonic.datadog.Graph.LineWidth.{Normal, Thick, Thin}
 import com.supersonic.datadog.Graph.Palette._
