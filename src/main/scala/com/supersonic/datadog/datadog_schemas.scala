@@ -2,6 +2,7 @@ package com.supersonic.datadog
 
 import com.supersonic.datadog.Graph.AggregationMethod.{Average, Max, Min, Sum}
 import com.supersonic.datadog.Graph.CountModifier.{Count, Rate}
+import com.supersonic.datadog.Graph.EventOverlay._
 import com.supersonic.datadog.Graph.Scope.{All, FromTemplateVariable, Tag}
 import com.supersonic.datadog.Graph.Series.{CompoundSeries, Constant, SimpleSeries}
 
@@ -22,11 +23,7 @@ object Graph {
   case class Definition(requests: List[Request],
                         visualization: Visualization,
                         yAxis: Option[YAxis] = None,
-                        deployEvent: DeployEvent)//,
-
-  case class DeployEvent() {
-    def renderEvent = s"tag:service:${???} sonic deploy"
-  }
+                        eventOverlay: EventOverlay)
 
   case class Request(series: List[Series],
                      style: Option[Style] = None,
@@ -70,6 +67,24 @@ object Graph {
     case class CompoundSeries(series1: Series, series2: Series, op: Op) extends Series
 
     case class Op(name: String)
+  }
+
+  sealed trait EventOverlay {
+    def render :String = this match {
+      case EventTag(name, value, eventName) =>
+        val renderedValue = value.map(v => s":$v").getOrElse("")
+        s"$name$renderedValue + $eventName"
+      case EventFromTemplateVariable(value, eventName) => "$" + value.name + eventName
+      case EventSources(source, eventName) => "sources:" + source + eventName
+      case EventName(eventName) => eventName
+    }
+  }
+
+  object EventOverlay {
+    case class EventTag(name: String, value: Option[String], eventName: Option[String]) extends EventOverlay
+    case class EventSources(source: String, eventName: Option[String]) extends EventOverlay
+    case class EventFromTemplateVariable(value: TemplateVariable, eventName: Option[String]) extends EventOverlay
+    case class EventName(eventName: String) extends EventOverlay
   }
 
   sealed trait VisualizationType

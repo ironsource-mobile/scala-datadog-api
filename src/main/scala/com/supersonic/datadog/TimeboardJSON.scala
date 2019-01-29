@@ -134,8 +134,8 @@ object TimeboardJSON {
     Json.fromString(name)
   }
 
-  implicit val eventOverlayEncoder: Encoder[DeployEvent] = Encoder.instance { deployEventOverlay =>
+  implicit val eventOverlayEncoder: Encoder[EventOverlay] = Encoder.instance { EventOverlay =>
     Json.obj(
-      "q" := deployEventOverlay.renderEvent.mkString(""))
+      "q" := EventOverlay.render)
   }
 }
