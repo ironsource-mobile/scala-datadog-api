@@ -2,18 +2,32 @@ sudo: false
 language: scala
 scala:
 - 2.12.6
-script:
-- sbt ++$TRAVIS_SCALA_VERSION test
 jdk:
 - oraclejdk8
+
+stages:
+  - name: build
+  - name: publish
+    if: ((branch = master) AND (type != pull_request)) OR (tag IS present)
+
+jobs:
+  include:
+    - stage: build
+      script: sbt ++$TRAVIS_SCALA_VERSION test
+    - stage: publish
+      # release only on merge commits or tags
+      script: if [[ "$(git rev-list --merges HEAD^..HEAD)" || "$TRAVIS_TAG" ]]; then
+                  sbt ++$TRAVIS_SCALA_VERSION +releaseEarly;
+              else
+                  echo "skipping release";
+              fi
+
 before_install:
 - if [ $TRAVIS_PULL_REQUEST = 'false' ]; then
     openssl aes-256-cbc -K $encrypted_054593f98bbe_key -iv $encrypted_054593f98bbe_iv -in travis/secrets.tar.enc -out travis/secrets.tar -d;
     tar xv -C travis -f travis/secrets.tar;
   fi
-after_success:
-- if [ $TRAVIS_PULL_REQUEST = 'false' ]; then sbt ++$TRAVIS_SCALA_VERSION releaseEarly;
-  fi
+
 env:
   global:
   - secure: "OeYYLh22mZCePacBSQ0DGz9XdwssRwUD7VuDBLXPmBmqnJHub0QG1k26y+LJfOnIU25AO2cRDozTLncqmTqey82KFI1ajUz8ahyTWvrDnQmiGNAZbwQNeV2jjchyPTeiD3y21hQfWwY01v8i3BQs9JW0ypcicEJ9HfomIVaeWU3obZbBkxr1+ySx/T1xLwgDGRX/L4AGdMF3f2obLYWWKRE3AvytouMt4YB9Fbg/3pkdPB+JNlToCF577+vMmYT1Z0jHyR/K5q3Er6TQAP5SIXIdM8auwtsjQWnIXnuFu/MESX8+t1rrCqonEAVF/szt0rJqiaQIEmfPLchJVj9GIWhWMb39GPKfyQNZ1DpP/kGLZDV/LsTZua3WD8pRZkFjeefgy2ufUZtW9Sqr1OacmGGnIy4G1rKivJmy/I2YCAeEVnWzkhAMyXgRmyNLmIQAZtKUI9SZ0Cx67aZ2GimmaBopLyjfHAM6mHMMkcL0bT/Z0DB4ofug+8JgE5htsC/Ky7HPGhMMoGMtPCaqkA2s5DXmDnATf+mA0Z7S3XslZJn5xlXIKpz2xcDO1N0u09/4awL36i1L+DryxqTO4X4+VZfPNosrM1SngiAAhbUA6pF1g+zASBy/qQkvYrhdej+1eR1hE30iu7FOwr5hR+KYMYXq0iPabqksoVKIOP5TMk0="
