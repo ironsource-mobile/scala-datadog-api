@@ -23,7 +23,7 @@ object Graph {
   case class Definition(requests: List[Request],
                         visualization: Visualization,
                         yAxis: Option[YAxis] = None,
-                        eventOverlay: EventOverlay)
+                        eventOverlay: Option[EventOverlay] = None)
 
   case class Request(series: List[Series],
                      style: Option[Style] = None,
@@ -67,24 +67,6 @@ object Graph {
     case class CompoundSeries(series1: Series, series2: Series, op: Op) extends Series
 
     case class Op(name: String)
-  }
-
-  sealed trait EventOverlay {
-    def render :String = this match {
-      case EventTag(name, value, eventName) =>
-        val renderedValue = value.map(v => s":$v").getOrElse("")
-        s"$name$renderedValue + $eventName"
-      case EventFromTemplateVariable(value, eventName) => "$" + value.name + eventName
-      case EventSources(source, eventName) => "sources:" + source + eventName
-      case EventName(eventName) => eventName
-    }
-  }
-
-  object EventOverlay {
-    case class EventTag(name: String, value: Option[String], eventName: Option[String]) extends EventOverlay
-    case class EventSources(source: String, eventName: Option[String]) extends EventOverlay
-    case class EventFromTemplateVariable(value: TemplateVariable, eventName: Option[String]) extends EventOverlay
-    case class EventName(eventName: String) extends EventOverlay
   }
 
   sealed trait VisualizationType
@@ -213,6 +195,34 @@ object Graph {
     def apply(name: String, value: String): Scope = Tag(name, Some(value))
 
     def service(serviceName: String): Scope = Tag(name = "service", value = Some(serviceName))
+  }
+
+
+  case class EventOverlay(name: Option[EventName],
+                          tag: Option[EventTag],
+                          sources: Option[EventSources],
+                          templateVariable: Option[EventFromTemplateVariable]) {
+
+    def render: String = {
+      val renderedName = name.map(_.eventName)
+      val renderedSource = sources.map(_.source).map(str => s"sources:$str")
+      val renderedTemplateVariable = templateVariable.map(_.value.name)
+        .map(str => s"$$$str")
+      val renderedTag =
+        for {
+          tagName <- tag.map(_.name)
+          tagValue <- tag.flatMap(_.value)
+        } yield s"$tagName:$tagValue"
+
+      List(renderedName, renderedTag, renderedSource, renderedTemplateVariable).flatten.mkString(" ")
+    }
+  }
+
+  object EventOverlay {
+    case class EventTag(name: String, value: Option[String])
+    case class EventSources(source: String)
+    case class EventFromTemplateVariable(value: TemplateVariable)
+    case class EventName(eventName: String)
   }
 
 }
