@@ -2,6 +2,7 @@ package com.supersonic.datadog
 
 import com.supersonic.datadog.Graph.AggregationMethod.{Average, Max, Min, Sum}
 import com.supersonic.datadog.Graph.CountModifier.{Count, Rate}
+import com.supersonic.datadog.Graph.EventOverlay._
 import com.supersonic.datadog.Graph.Scope.{All, FromTemplateVariable, Tag}
 import com.supersonic.datadog.Graph.Series.{CompoundSeries, Constant, SimpleSeries}
 
@@ -21,7 +22,8 @@ case class TemplateVariable(name: String, prefix: String, default: Option[String
 object Graph {
   case class Definition(requests: List[Request],
                         visualization: Visualization,
-                        yAxis: Option[YAxis] = None)
+                        yAxis: Option[YAxis] = None,
+                        eventOverlay: Option[EventOverlay] = None)
 
   case class Request(series: List[Series],
                      style: Option[Style] = None,
@@ -193,6 +195,34 @@ object Graph {
     def apply(name: String, value: String): Scope = Tag(name, Some(value))
 
     def service(serviceName: String): Scope = Tag(name = "service", value = Some(serviceName))
+  }
+
+
+  case class EventOverlay(name: Option[EventName],
+                          tag: Option[EventTag],
+                          sources: Option[EventSources],
+                          templateVariable: Option[EventFromTemplateVariable]) {
+
+    def render: String = {
+      val renderedName = name.map(_.eventName)
+      val renderedSource = sources.map(_.source).map(str => s"sources:$str")
+      val renderedTemplateVariable = templateVariable.map(_.value.name)
+        .map(str => s"$$$str")
+      val renderedTag =
+        for {
+          tagName <- tag.map(_.name)
+          tagValue <- tag.flatMap(_.value)
+        } yield s"$tagName:$tagValue"
+
+      List(renderedName, renderedTag, renderedSource, renderedTemplateVariable).flatten.mkString(" ")
+    }
+  }
+
+  object EventOverlay {
+    case class EventTag(name: String, value: Option[String])
+    case class EventSources(source: String)
+    case class EventFromTemplateVariable(value: TemplateVariable)
+    case class EventName(eventName: String)
   }
 
 }

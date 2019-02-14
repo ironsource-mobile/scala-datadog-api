@@ -6,7 +6,7 @@ import com.supersonic.datadog.Graph.Palette._
 import com.supersonic.datadog.Graph.Visualization._
 import com.supersonic.datadog.Graph.VisualizationType.{Areas, Bars, Lines}
 import com.supersonic.datadog.Graph.YAxis.Scale.{Linear, Log, Pow, SQRT}
-import com.supersonic.datadog.Graph.{Request, Visualization, VisualizationType, YAxis}
+import com.supersonic.datadog.Graph._
 import io.circe._
 import io.circe.syntax._
 
@@ -132,5 +132,9 @@ object TimeboardJSON {
     }
 
     Json.fromString(name)
+  }
+
+  implicit def eventOverlayEncoder: Encoder[EventOverlay] = Encoder.instance { eventOverlay =>
+    Json.obj("q" := eventOverlay.render)
   }
 }
