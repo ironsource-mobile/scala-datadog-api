@@ -37,7 +37,8 @@ object TimeboardJSON {
     Json.obj(
       "requests" := definition.requests,
       "vis" := definition.visualization,
-      "yaxis" := definition.yAxis)
+      "yaxis" := definition.yAxis,
+      "events" := definition.eventOverlay)
   }
 
   implicit val requestEncoder: Encoder[Request] = Encoder.instance { request =>
