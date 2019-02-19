@@ -15,12 +15,7 @@ jobs:
     - stage: build
       script: sbt ++$TRAVIS_SCALA_VERSION test
     - stage: publish
-      # release only on merge commits or tags
-      script: if [[ "$(git rev-list --merges HEAD^..HEAD)" || "$TRAVIS_TAG" ]]; then
-                  sbt ++$TRAVIS_SCALA_VERSION +releaseEarly;
-              else
-                  echo "skipping release";
-              fi
+      script: sbt ++$TRAVIS_SCALA_VERSION +releaseEarly;
 
 before_install:
 - if [ $TRAVIS_PULL_REQUEST = 'false' ]; then
