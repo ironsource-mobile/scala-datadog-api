@@ -1,5 +1,6 @@
 package com.supersonic.datadog
 
+import com.supersonic.datadog.Graph.EventOverlay._
 import com.supersonic.datadog.Graph.Series.SimpleSeries
 import com.supersonic.datadog.Graph._
 import com.supersonic.datadog.TimeboardJSON._
@@ -31,7 +32,13 @@ class TimeboardJSONTest extends WordSpec with Matchers {
                       aggregationMethod = Some(AggregationMethod.Average),
                       groups = List(Group("host")))),
                   visualizationType = Some(VisualizationType.Lines))),
-              visualization = Visualization.Timeseries))
+              visualization = Visualization.Timeseries,
+              eventOverlays = Some(List(
+                EventOverlay(
+                  Some(EventName("deploy-event")),
+                  tag = Some(EventTag("a-tag", value = "some-value")),
+                  sources = None,
+                  templateVariable = None)))))
 
       val messages = {
         def rate(style: Style, function: Option[Function]) =
@@ -81,7 +88,11 @@ class TimeboardJSONTest extends WordSpec with Matchers {
                 ],
                 "vis" : "timeseries",
                 "yaxis" : null,
-                "events" : null
+                "events" : [
+                  {
+                    "q" : "deploy-event a-tag:some-value"
+                  }
+                ]
               }
             },
             {

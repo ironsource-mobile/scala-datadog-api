@@ -7,7 +7,7 @@ import org.scalatest.{Matchers, WordSpec}
 class DatadogSchemaTest extends WordSpec with Matchers {
 
   val eventName = Some(EventName("event"))
-  val eventTag = Some(EventTag("tag-name", Some("tag-value")))
+  val eventTag = Some(EventTag("tag-name", "tag-value"))
   val eventTemplate = Some(EventFromTemplateVariable(TemplateVariable("test", "", None)))
   val eventSources = Some(EventSources("source"))
 

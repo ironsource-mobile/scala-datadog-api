@@ -23,7 +23,7 @@ object Graph {
   case class Definition(requests: List[Request],
                         visualization: Visualization,
                         yAxis: Option[YAxis] = None,
-                        eventOverlay: Option[EventOverlay] = None)
+                        eventOverlays: Option[List[EventOverlay]] = None)
 
   case class Request(series: List[Series],
                      style: Option[Style] = None,
@@ -211,7 +211,7 @@ object Graph {
       val renderedTag =
         for {
           tagName <- tag.map(_.name)
-          tagValue <- tag.flatMap(_.value)
+          tagValue <- tag.map(_.value)
         } yield s"$tagName:$tagValue"
 
       List(renderedName, renderedTag, renderedSource, renderedTemplateVariable).flatten.mkString(" ")
@@ -219,10 +219,9 @@ object Graph {
   }
 
   object EventOverlay {
-    case class EventTag(name: String, value: Option[String])
+    case class EventTag(name: String, value: String)
     case class EventSources(source: String)
     case class EventFromTemplateVariable(value: TemplateVariable)
     case class EventName(eventName: String)
   }
-
 }
