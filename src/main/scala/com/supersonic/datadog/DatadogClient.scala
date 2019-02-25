@@ -2,7 +2,7 @@ package com.supersonic.datadog
 
 import com.softwaremill.sttp._
 import com.softwaremill.sttp.circe._
-import com.superonic.SttpSyntax._
+import com.supersonic.SttpSyntax._
 import com.supersonic.datadog.TimeboardJSON._
 import io.circe
 import io.circe.{Decoder, Encoder}

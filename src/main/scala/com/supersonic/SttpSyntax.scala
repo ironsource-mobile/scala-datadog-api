@@ -1,4 +1,4 @@
-package com.superonic
+package com.supersonic
 
 import com.softwaremill.sttp.MonadError
 
