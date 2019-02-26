@@ -90,7 +90,7 @@ class TimeboardJSONTest extends WordSpec with Matchers {
                 "yaxis" : null,
                 "events" : [
                   {
-                    "q" : "deploy-event a-tag:some-value"
+                    "q" : "deploy-event tags:a-tag:some-value"
                   }
                 ]
               }
