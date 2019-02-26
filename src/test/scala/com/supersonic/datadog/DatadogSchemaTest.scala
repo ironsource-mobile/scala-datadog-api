@@ -14,7 +14,7 @@ class DatadogSchemaTest extends WordSpec with Matchers {
   "event overlay" should {
     "return the all event data" in {
       val event = EventOverlay(eventName, eventTag, eventSources, eventTemplate)
-      val expectedOverlay = "event tag-name:tag-value sources:source $test"
+      val expectedOverlay = "event tags:tag-name:tag-value sources:source $test"
       event.render shouldBe expectedOverlay
     }
 
@@ -26,7 +26,7 @@ class DatadogSchemaTest extends WordSpec with Matchers {
 
     "return the event tag" in {
       val event = EventOverlay(None, eventTag, None, None)
-      val expectedOverlay = "tag-name:tag-value"
+      val expectedOverlay = "tags:tag-name:tag-value"
       event.render shouldBe expectedOverlay
     }
 
