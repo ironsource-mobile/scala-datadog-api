@@ -212,7 +212,7 @@ object Graph {
         for {
           tagName <- tag.map(_.name)
           tagValue <- tag.map(_.value)
-        } yield s"$tagName:$tagValue"
+        } yield s"tags:$tagName:$tagValue"
 
       List(renderedName, renderedTag, renderedSource, renderedTemplateVariable).flatten.mkString(" ")
     }
