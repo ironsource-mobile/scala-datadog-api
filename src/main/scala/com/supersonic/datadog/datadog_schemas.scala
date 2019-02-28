@@ -25,13 +25,24 @@ object Graph {
                         yAxis: Option[YAxis] = None,
                         eventOverlays: Option[List[EventOverlay]] = None)
 
-  case class Request(series: List[Series],
+
+  case class Request(series: List[SeriesWithMetadata],
                      style: Option[Style] = None,
                      visualizationType: Option[VisualizationType] = None)
 
+  case class SeriesWithMetadata(series: Series, metadata: Option[Metadata])
+
+  object SeriesWithMetadata {
+    import scala.language.implicitConversions
+
+    implicit def fromSeries(series: Series): SeriesWithMetadata =
+      SeriesWithMetadata(series, metadata = None)
+  }
+  case class Metadata(alias: Option[String])
+
   sealed trait Series {
     def render: String = this match {
-      case SimpleSeries(metric, aggregationMethod, function, groups, countModifier) =>
+      case SimpleSeries(metric, aggregationMethod, function, groups, countModifier, alias) =>
         val renderedMetric = metric.render
 
         val renderedAggregationMethod =
@@ -62,7 +73,8 @@ object Graph {
                             aggregationMethod: Option[AggregationMethod],
                             function: Option[Function] = None,
                             groups: List[Group] = List.empty,
-                            countModifier: Option[CountModifier] = None) extends Series
+                            countModifier: Option[CountModifier] = None,
+                            alias: Option[String] = None) extends Series
     case class Constant(value: Double) extends Series
     case class CompoundSeries(series1: Series, series2: Series, op: Op) extends Series
 
