@@ -42,7 +42,7 @@ object Graph {
 
   sealed trait Series {
     def render: String = this match {
-      case SimpleSeries(metric, aggregationMethod, function, groups, countModifier, alias) =>
+      case SimpleSeries(metric, aggregationMethod, function, groups, countModifier) =>
         val renderedMetric = metric.render
 
         val renderedAggregationMethod =
@@ -73,8 +73,7 @@ object Graph {
                             aggregationMethod: Option[AggregationMethod],
                             function: Option[Function] = None,
                             groups: List[Group] = List.empty,
-                            countModifier: Option[CountModifier] = None,
-                            alias: Option[String] = None) extends Series
+                            countModifier: Option[CountModifier] = None) extends Series
     case class Constant(value: Double) extends Series
     case class CompoundSeries(series1: Series, series2: Series, op: Op) extends Series
 

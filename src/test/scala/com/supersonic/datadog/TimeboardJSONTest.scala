@@ -70,76 +70,7 @@ class TimeboardJSONTest extends WordSpec with Matchers {
         graphs = List(cpu, messages),
         templateVariables = List(host, env))
 
-      val expected = parse {
-        s"""
-        {
-          "title" : "Test timeboard",
-          "description" : "Some timeboard",
-          "graphs" : [
-            {
-              "title" : "CPU",
-              "definition" : {
-                "requests" : [
-                  {
-                    "q" : "avg:system.cpu.user{service:test-service, $$host, $$env} by {host}",
-                    "style" : null,
-                    "type" : "line"
-                  }
-                ],
-                "vis" : "timeseries",
-                "yaxis" : null,
-                "events" : [
-                  {
-                    "q" : "deploy-event tags:a-tag:some-value"
-                  }
-                ]
-              }
-            },
-            {
-              "title" : "Incoming rate",
-              "definition" : {
-                "requests" : [
-                  {
-                    "q" : "sum:incoming.messages{$$env}.as_rate()",
-                    "style" : {
-                      "palette" : "dog_classic",
-                      "type" : "solid",
-                      "width" : "normal"
-                    },
-                    "type" : "line"
-                  },
-                  {
-                    "q" : "week_before(sum:incoming.messages{$$env}.as_rate())",
-                    "style" : {
-                      "palette" : "dog_classic",
-                      "type" : "dotted",
-                      "width" : "thin"
-                    },
-                    "type" : "line"
-                  }
-                ],
-                "vis" : "timeseries",
-                "yaxis" : null,
-                "events" : null
-              }
-            }
-          ],
-          "template_variables" : [
-            {
-              "name" : "host",
-              "prefix" : "host",
-              "default" : "*"
-            },
-            {
-              "name" : "env",
-              "prefix" : "environment",
-              "default" : null
-            }
-          ],
-          "autoscale" : true
-        }
-        """
-      }.right.get // because it's a test and guaranteed to succeed
+      val expected = parse {JSONTestUtil.TimeboardJSONTest}.right.get // because it's a test and guaranteed to succeed
 
       val rendered = timeboard.asJson
 
