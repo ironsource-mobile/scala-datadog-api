@@ -1,10 +1,15 @@
 package com.supersonic.datadog
 
+import io.circe.Json
 import io.circe.parser.parse
 
 object JSONTestUtil {
 
-  val multipleSeriesWithMetadataExpectedJSON = parse {
+  def unsafeParse(json: String): Json = {
+    parse(json).right.get // because it's a test and guaranteed to succeed
+  }
+
+  val multipleSeriesWithMetadataExpectedJSON = unsafeParse(
     s"""
         {
           "autoscale": true,
@@ -49,9 +54,9 @@ object JSONTestUtil {
           "autoscale" : true
         }
         """
-  }.right.get // because it's a test and guaranteed to succeed
+  )
 
-  val seriesWithMetadataExpectedJSON = parse {
+  val seriesWithMetadataExpectedJSON = unsafeParse(
     s"""
         {
           "autoscale": true,
@@ -93,9 +98,9 @@ object JSONTestUtil {
           "autoscale" : true
         }
         """
-  }.right.get // because it's a test and guaranteed to succeed
+  )
 
-  val timeboardExpectedJSONT = parse {
+  val timeboardExpectedJSON = unsafeParse(
     s"""
         {
           "title" : "Test timeboard",
@@ -164,6 +169,5 @@ object JSONTestUtil {
           "autoscale" : true
         }
         """
-  }.right.get // because it's a test and guaranteed to succeed
-
+  )
 }
