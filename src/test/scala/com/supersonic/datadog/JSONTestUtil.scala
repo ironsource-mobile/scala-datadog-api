@@ -1,8 +1,101 @@
 package com.supersonic.datadog
 
+import io.circe.parser._
+
 object JSONTestUtil {
 
-  val TimeboardJSONTest =
+  val multipleSeriesWithMetadataExpectedJSON = parse {
+    s"""
+        {
+          "autoscale": true,
+          "title": "Test timeboard",
+          "description": "Some timeboard",
+          "graphs": [
+            {
+              "title": "CPU",
+              "definition": {
+                "requests": [
+                  {
+                    "q": "avg:system.cpu.user{service:test-service, $$host, $$env} by {host}, avg:aws.ec2.host_ok{service:test-service, $$host, $$env} by {host}",
+                    "style": null,
+                    "type": "line",
+                    "metadata" : {
+                      "avg:system.cpu.user{service:test-service, $$host, $$env} by {host}" : {
+                        "alias" : "first - numOfServices"
+                      },
+                      "avg:aws.ec2.host_ok{service:test-service, $$host, $$env} by {host}" : {
+                        "alias" : "second - numOfServices"
+                      }
+                    }
+                  }
+                ],
+                "vis": "timeseries",
+                "yaxis": null,
+                "events": [
+                  {
+                    "q": "deploy-event tags:a-tag:some-value"
+                  }
+                ]
+              }
+            }
+          ],
+          "template_variables": [
+            {
+              "name": "host",
+              "prefix": "host",
+              "default": "*"
+            }
+          ],
+          "autoscale" : true
+        }
+        """
+  }.right.get // because it's a test and guaranteed to succeed
+
+  val seriesWithMetadataExpectedJSON = parse {
+    s"""
+        {
+          "autoscale": true,
+          "title": "Test timeboard",
+          "description": "Some timeboard",
+          "graphs": [
+            {
+              "title": "CPU",
+              "definition": {
+                "requests": [
+                  {
+                    "q": "avg:system.cpu.user{service:test-service, $$host, $$env} by {host}",
+                    "style": null,
+                    "type": "line",
+                    "metadata" : {
+                      "avg:system.cpu.user{service:test-service, $$host, $$env} by {host}" : {
+                        "alias" : "numOfServices"
+                      }
+                    }
+                  }
+                ],
+                "vis": "timeseries",
+                "yaxis": null,
+                "events": [
+                  {
+                    "q": "deploy-event tags:a-tag:some-value"
+                  }
+                ]
+              }
+            }
+          ],
+          "template_variables": [
+            {
+              "name": "host",
+              "prefix": "host",
+              "default": "*"
+            }
+          ],
+          "autoscale" : true
+        }
+        """
+  }.right.get // because it's a test and guaranteed to succeed
+
+  val timeboardExpectedJSONT = parse {
     s"""
         {
           "title" : "Test timeboard",
@@ -71,93 +164,6 @@ object JSONTestUtil {
           "autoscale" : true
         }
         """
+  }.right.get // because it's a test and guaranteed to succeed
 
-  val SeriesWithMetadataJSON =
-    s"""
-        {
-          "autoscale": true,
-          "title": "Test timeboard",
-          "description": "Some timeboard",
-          "graphs": [
-            {
-              "title": "CPU",
-              "definition": {
-                "requests": [
-                  {
-                    "q": "avg:system.cpu.user{service:test-service, $$host, $$env} by {host}",
-                    "style": null,
-                    "type": "line",
-                    "metadata" : {
-                      "avg:system.cpu.user{service:test-service, $$host, $$env} by {host}" : {
-                        "alias" : "numOfServices"
-                      }
-                    }
-                  }
-                ],
-                "vis": "timeseries",
-                "yaxis": null,
-                "events": [
-                  {
-                    "q": "deploy-event tags:a-tag:some-value"
-                  }
-                ]
-              }
-            }
-          ],
-          "template_variables": [
-            {
-              "name": "host",
-              "prefix": "host",
-              "default": "*"
-            }
-          ],
-          "autoscale" : true
-        }
-        """
-
-  val MultipleSeriesWithMetadataJSONT =
-    s"""
-        {
-          "autoscale": true,
-          "title": "Test timeboard",
-          "description": "Some timeboard",
-          "graphs": [
-            {
-              "title": "CPU",
-              "definition": {
-                "requests": [
-                  {
-                    "q": "avg:system.cpu.user{service:test-service, $$host, $$env} by {host}, avg:aws.ec2.host_ok{service:test-service, $$host, $$env} by {host}",
-                    "style": null,
-                    "type": "line",
-                    "metadata" : {
-                      "avg:system.cpu.user{service:test-service, $$host, $$env} by {host}" : {
-                        "alias" : "first - numOfServices"
-                      },
-                      "avg:aws.ec2.host_ok{service:test-service, $$host, $$env} by {host}" : {
-                        "alias" : "second - numOfServices"
-                      }
-                    }
-                  }
-                ],
-                "vis": "timeseries",
-                "yaxis": null,
-                "events": [
-                  {
-                    "q": "deploy-event tags:a-tag:some-value"
-                  }
-                ]
-              }
-            }
-          ],
-          "template_variables": [
-            {
-              "name": "host",
-              "prefix": "host",
-              "default": "*"
-            }
-          ],
-          "autoscale" : true
-        }
-        """
 }

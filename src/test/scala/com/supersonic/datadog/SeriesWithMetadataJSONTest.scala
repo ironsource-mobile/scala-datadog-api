@@ -47,11 +47,7 @@ class SeriesWithMetadataJSONTest extends WordSpec with Matchers {
         graphs = List(cpu),
         templateVariables = List(host))
 
-      val expected = parse {
-        JSONTestUtil.SeriesWithMetadataJSON
-      }.right.get // because it's a test and guaranteed to succeed
-
-      timeboard.asJson shouldBe expected
+      timeboard.asJson shouldBe JSONTestUtil.seriesWithMetadataExpectedJSON
     }
   }
 
@@ -100,11 +96,7 @@ class SeriesWithMetadataJSONTest extends WordSpec with Matchers {
         graphs = List(cpu),
         templateVariables = List(host))
 
-      val expected = parse {
-        JSONTestUtil.MultipleSeriesWithMetadataJSONT
-      }.right.get // because it's a test and guaranteed to succeed
-
-      timeboard.asJson shouldBe expected
+      timeboard.asJson shouldBe JSONTestUtil.multipleSeriesWithMetadataExpectedJSON
     }
   }
 

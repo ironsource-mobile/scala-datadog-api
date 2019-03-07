@@ -4,7 +4,6 @@ import com.supersonic.datadog.Graph.EventOverlay._
 import com.supersonic.datadog.Graph.Series.SimpleSeries
 import com.supersonic.datadog.Graph._
 import com.supersonic.datadog.TimeboardJSON._
-import io.circe.parser._
 import io.circe.syntax._
 import org.scalatest.{Matchers, WordSpec}
 
@@ -70,11 +69,7 @@ class TimeboardJSONTest extends WordSpec with Matchers {
         graphs = List(cpu, messages),
         templateVariables = List(host, env))
 
-      val expected = parse {JSONTestUtil.TimeboardJSONTest}.right.get // because it's a test and guaranteed to succeed
-
-      val rendered = timeboard.asJson
-
-      rendered shouldBe expected
+      timeboard.asJson shouldBe JSONTestUtil.timeboardExpectedJSONT
     }
   }
 }

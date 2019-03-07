@@ -46,17 +46,16 @@ object TimeboardJSON {
       series.metadata.map(data => (series.series.render, data))
     }
 
-    metadataList match {
-      case Nil => Json.obj(
-        "q" := request.series.map(_.series.render).mkString(", "),
-        "style" := request.style,
-        "type" := request.visualizationType)
-      case _ => Json.obj(
-        "q" := request.series.map(_.series.render).mkString(", "),
-        "style" := request.style,
-        "type" := request.visualizationType,
-        "metadata" := metadataList.toMap)
-    }
+    val metadataField =
+      if (metadataList.isEmpty) None
+      else Some("metadata" := metadataList.toMap)
+
+    val fields = List(
+      "q" := request.series.map(_.series.render).mkString(", "),
+      "style" := request.style,
+      "type" := request.visualizationType) ++ metadataField
+
+    Json.fromFields(fields)
   }
 
   implicit val seriesEncoder: Encoder[Graph.Series] = Encoder.instance { series =>
