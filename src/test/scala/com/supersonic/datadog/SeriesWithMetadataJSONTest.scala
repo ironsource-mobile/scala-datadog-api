@@ -4,7 +4,6 @@ import com.supersonic.datadog.Graph.EventOverlay._
 import com.supersonic.datadog.Graph.Series.SimpleSeries
 import com.supersonic.datadog.Graph._
 import com.supersonic.datadog.TimeboardJSON._
-import io.circe.parser._
 import io.circe.syntax._
 import org.scalatest.{Matchers, WordSpec}
 
