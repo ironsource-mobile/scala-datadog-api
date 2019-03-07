@@ -5,11 +5,10 @@ import io.circe.parser.parse
 
 object JSONTestUtil {
 
-  def unsafeParse(json: String): Json = {
+  def unsafeParse(json: String): Json =
     parse(json).right.get // because it's a test and guaranteed to succeed
-  }
 
-  val multipleSeriesWithMetadataExpectedJSON = unsafeParse(
+  val multipleSeriesWithMetadataExpectedJSON = unsafeParse {
     s"""
         {
           "autoscale": true,
@@ -54,9 +53,9 @@ object JSONTestUtil {
           "autoscale" : true
         }
         """
-  )
+  }
 
-  val seriesWithMetadataExpectedJSON = unsafeParse(
+  val seriesWithMetadataExpectedJSON = unsafeParse {
     s"""
         {
           "autoscale": true,
@@ -98,9 +97,9 @@ object JSONTestUtil {
           "autoscale" : true
         }
         """
-  )
+  }
 
-  val timeboardExpectedJSON = unsafeParse(
+  val timeboardExpectedJSON = unsafeParse {
     s"""
         {
           "title" : "Test timeboard",
@@ -169,5 +168,5 @@ object JSONTestUtil {
           "autoscale" : true
         }
         """
-  )
+  }
 }
