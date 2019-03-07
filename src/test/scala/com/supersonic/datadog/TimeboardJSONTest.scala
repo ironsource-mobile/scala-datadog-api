@@ -4,7 +4,6 @@ import com.supersonic.datadog.Graph.EventOverlay._
 import com.supersonic.datadog.Graph.Series.SimpleSeries
 import com.supersonic.datadog.Graph._
 import com.supersonic.datadog.TimeboardJSON._
-import io.circe.parser._
 import io.circe.syntax._
 import org.scalatest.{Matchers, WordSpec}
 
@@ -70,80 +69,8 @@ class TimeboardJSONTest extends WordSpec with Matchers {
         graphs = List(cpu, messages),
         templateVariables = List(host, env))
 
-      val expected = parse {
-        s"""
-        {
-          "title" : "Test timeboard",
-          "description" : "Some timeboard",
-          "graphs" : [
-            {
-              "title" : "CPU",
-              "definition" : {
-                "requests" : [
-                  {
-                    "q" : "avg:system.cpu.user{service:test-service, $$host, $$env} by {host}",
-                    "style" : null,
-                    "type" : "line"
-                  }
-                ],
-                "vis" : "timeseries",
-                "yaxis" : null,
-                "events" : [
-                  {
-                    "q" : "deploy-event tags:a-tag:some-value"
-                  }
-                ]
-              }
-            },
-            {
-              "title" : "Incoming rate",
-              "definition" : {
-                "requests" : [
-                  {
-                    "q" : "sum:incoming.messages{$$env}.as_rate()",
-                    "style" : {
-                      "palette" : "dog_classic",
-                      "type" : "solid",
-                      "width" : "normal"
-                    },
-                    "type" : "line"
-                  },
-                  {
-                    "q" : "week_before(sum:incoming.messages{$$env}.as_rate())",
-                    "style" : {
-                      "palette" : "dog_classic",
-                      "type" : "dotted",
-                      "width" : "thin"
-                    },
-                    "type" : "line"
-                  }
-                ],
-                "vis" : "timeseries",
-                "yaxis" : null,
-                "events" : null
-              }
-            }
-          ],
-          "template_variables" : [
-            {
-              "name" : "host",
-              "prefix" : "host",
-              "default" : "*"
-            },
-            {
-              "name" : "env",
-              "prefix" : "environment",
-              "default" : null
-            }
-          ],
-          "autoscale" : true
-        }
-        """
-      }.right.get // because it's a test and guaranteed to succeed
+      timeboard.asJson shouldBe JSONTestUtil.timeboardExpectedJSON
 
-      val rendered = timeboard.asJson
-
-      rendered shouldBe expected
     }
   }
 }

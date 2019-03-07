@@ -25,9 +25,25 @@ object Graph {
                         yAxis: Option[YAxis] = None,
                         eventOverlays: Option[List[EventOverlay]] = None)
 
-  case class Request(series: List[Series],
+
+  case class Request(series: List[SeriesWithMetadata],
                      style: Option[Style] = None,
                      visualizationType: Option[VisualizationType] = None)
+
+  case class SeriesWithMetadata(series: Series, metadata: Option[Metadata] = None)
+
+  object SeriesWithMetadata {
+    import scala.language.implicitConversions
+
+    // needed for streamlined syntax in cases where there isn't any metadata (which should be most cases)
+
+    implicit def fromSeries(series: Series): SeriesWithMetadata =
+      SeriesWithMetadata(series, metadata = None)
+
+    implicit def fromListOfSeries(series: List[Series]): List[SeriesWithMetadata] =
+      series.map(fromSeries)
+  }
+  case class Metadata(alias: Option[String])
 
   sealed trait Series {
     def render: String = this match {

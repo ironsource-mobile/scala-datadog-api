@@ -42,14 +42,28 @@ object TimeboardJSON {
   }
 
   implicit val requestEncoder: Encoder[Request] = Encoder.instance { request =>
-    Json.obj(
-      "q" := request.series.map(_.render).mkString(", "),
+    val metadataList = request.series.flatMap { series =>
+      series.metadata.map(data => (series.series.render, data))
+    }
+
+    val metadataField =
+      if (metadataList.isEmpty) None
+      else Some("metadata" := metadataList.toMap)
+
+    val fields = List(
+      "q" := request.series.map(_.series.render).mkString(", "),
       "style" := request.style,
-      "type" := request.visualizationType)
+      "type" := request.visualizationType) ++ metadataField
+
+    Json.fromFields(fields)
   }
 
   implicit val seriesEncoder: Encoder[Graph.Series] = Encoder.instance { series =>
     Json.fromString(series.render)
+  }
+
+  implicit val metadataEncoder: Encoder[Metadata] = Encoder.instance { metadata =>
+    Json.obj("alias" := metadata.alias)
   }
 
   implicit val styleEncoder: Encoder[Graph.Style] = Encoder.instance { style =>
