@@ -1,6 +1,6 @@
 package com.supersonic.datadog
 
-import io.circe.parser._
+import io.circe.parser.parse
 
 object JSONTestUtil {
 

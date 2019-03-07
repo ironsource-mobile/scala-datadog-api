@@ -70,6 +70,7 @@ class TimeboardJSONTest extends WordSpec with Matchers {
         templateVariables = List(host, env))
 
       timeboard.asJson shouldBe JSONTestUtil.timeboardExpectedJSONT
+
     }
   }
 }
