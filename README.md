@@ -8,6 +8,6 @@ Currently supporting the definition and creation of [timeboards](https://docs.da
 ```scala
 resolvers += Resolver.jcenterRepo
 
-libraryDependencies += "com.supersonic" %% "scala-datadog-api" % "0.3.1"
+libraryDependencies += "com.supersonic" %% "scala-datadog-api" % "0.3.2"
 ``` 
 
