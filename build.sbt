@@ -39,7 +39,7 @@ def testDependencies = List(
   "org.scalatest" %% "scalatest" % "3.0.4" % "test")
 
 def circeDependencies = {
-  val circeVersion = "0.9.3"
+  val circeVersion = "0.11.1"
 
   List(
     "io.circe" %% "circe-core",
