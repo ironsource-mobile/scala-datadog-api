@@ -39,10 +39,14 @@ object TimeboardDescription {
   implicit val decoder: Decoder[TimeboardDescription] = Decoder.instance { c =>
     for {
       title <- c.downField("title").as[String].right
-      description <- c.downField("description").as[String].right
+      description <- c.downField("description").as[Option[String]].right
       id <- c.downField("id").as[String].right
       resource <- c.downField("resource").as[String].right
-    } yield TimeboardDescription(title = title, description = description, id = id.toInt, resource)
+    } yield TimeboardDescription(
+      title = title,
+      description = description.getOrElse(""),
+      id = id.toInt,
+      resource)
   }
 }
 
