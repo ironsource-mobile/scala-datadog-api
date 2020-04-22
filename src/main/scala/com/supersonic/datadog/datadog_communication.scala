@@ -12,6 +12,8 @@ final case class TimeboardDescription(title: String,
                                       id: Int,
                                       resource: String)
 
+final case class SimpleResponse(status: String)
+
 final case class AllTimeboardsResponse(timeboards: List[TimeboardDescription])
 
 final class BadStatusCode(code: Int) extends Exception(s"Bad status code $code")
@@ -53,5 +55,13 @@ object TimeboardDescription {
 object AllTimeboardsResponse {
   implicit val decoder: Decoder[AllTimeboardsResponse] = Decoder.instance { c =>
     c.downField("dashes").as[List[TimeboardDescription]].right.map(AllTimeboardsResponse.apply)
+  }
+}
+
+object SimpleResponse {
+  implicit val decoder: Decoder[SimpleResponse] = Decoder.instance { c =>
+    for {
+      status <- c.downField("status").as[String].right
+    } yield SimpleResponse(status = status)
   }
 }

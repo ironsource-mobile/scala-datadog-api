@@ -16,6 +16,8 @@ trait DatadogClient[F[_]] {
   /** @see [[DatadogDerivedActions.addTimeboardIfMissing]] */
   def addTimeboardIfMissing(timeboard: Timeboard): F[AddTimeboardIfMissingResponse]
 
+  def gauge(key: String, value: Long, tags: Map[String, String] = Map.empty): F[SimpleResponse]
+
   /** Closes the client. */
   def close(): Unit
 }
@@ -32,6 +34,9 @@ abstract class ActionsBasedDatadogClient[F[_]](actions: DatadogActions[F])
 
   def addTimeboardIfMissing(timeboard: Timeboard): F[AddTimeboardIfMissingResponse] =
     derivedActions.addTimeboardIfMissing(timeboard)
+
+  def gauge(key: String, value: Long, tags: Map[String, String]): F[SimpleResponse] =
+    actions.gauge(key, value, tags)
 }
 
 object DatadogClient {

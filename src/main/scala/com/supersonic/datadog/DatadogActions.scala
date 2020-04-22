@@ -14,6 +14,9 @@ trait DatadogActions[F[_]] {
 
   /** Fetches all the currently available timeboards. */
   def getAllTimeboards(): F[AllTimeboardsResponse]
+
+  def gauge(key: String, value: Long, tags: Map[String, String]): F[SimpleResponse]
+
 }
 
 /** Helper actions that can be derived derived from [[DatadogActions]]. */
@@ -56,6 +59,19 @@ final class SttpDatadogActions[F[_]](httpBackend: SttpBackend[F, Nothing])
   def getAllTimeboards(): F[AllTimeboardsResponse] =
     get[AllTimeboardsResponse]("dash")
 
+  def gauge(key: String, value: Long, tags: Map[String, String]): F[SimpleResponse] = {
+    val now = System.currentTimeMillis / 1000
+    val dataDogSeries =
+      DataDogSeries(
+        List(DataDogSingleSeries(
+          metric = key,
+          List(List(now, value)),
+          `type` = "gauge",
+          tags = tags)))
+
+    post[DataDogSeries, SimpleResponse]("series", dataDogSeries)(DataDogSeriesJSON.dataDogSeries, SimpleResponse.decoder)
+  }
+
   private def withCredentials(path: String) =
     uri"$url/api/v1/$path?api_key=$apiKey&application_key=$appKey"
 
@@ -78,7 +94,7 @@ final class SttpDatadogActions[F[_]](httpBackend: SttpBackend[F, Nothing])
 
   private def parseResponse[A: Decoder](maybeResponse: F[Response[Either[circe.Error, A]]]): F[A] = {
     maybeResponse.flatMap { response =>
-      if (response.code != 200) monad.error[Either[circe.Error, A]](new BadStatusCode(response.code))
+      if (!Set(200, 202).contains(response.code)) monad.error[Either[circe.Error, A]](new BadStatusCode(response.code))
       else response.body.fold(
         reason => monad.error[Either[circe.Error, A]](new MissingBody(reason)),
         s => monad.unit(s))
