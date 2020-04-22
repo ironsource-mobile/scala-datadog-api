@@ -15,6 +15,16 @@ case class Timeboard(title: String,
                      templateVariables: List[TemplateVariable],
                      autoScale: Boolean = true)
 
+/**
+ * gauge / count / rate payload
+ * https://docs.datadoghq.com/api/?lang=bash#post-timeseries-points
+ */
+case class DataDogSeries(series: List[DataDogSingleSeries])
+case class DataDogSingleSeries(metric: String,
+                               points: List[List[Long]],
+                               `type`: String,
+                               tags: Map[String, String])
+
 case class Graph(title: String, definition: Graph.Definition)
 
 case class TemplateVariable(name: String, prefix: String, default: Option[String])
