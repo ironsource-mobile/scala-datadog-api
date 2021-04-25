@@ -15,19 +15,28 @@ lazy val root = (project in file("."))
       "-Xfuture",
       "-Xlint",
       "-Ypartial-unification"),
+    sonatypeCredentialHost := Sonatype.sonatype01,
     libraryDependencies ++= (dependencies ++ testDependencies),
-    sources in (Compile, doc) := List.empty)
+    Compile / doc / sources := List.empty)
 
+sonatypeCredentialHost := Sonatype.sonatype01
 inThisBuild(List(
-  licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+  organization := "com.supersonic",
   homepage := Some(url("https://github.com/SupersonicAds/scala-datadog-api")),
+  licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
   developers := List(Developer("SupersonicAds", "SupersonicAds", "SupersonicAds", url("https://github.com/SupersonicAds"))),
   scmInfo := Some(ScmInfo(url("https://github.com/SupersonicAds/scala-datadog-api"), "scm:git:git@github.com:SupersonicAds/scala-datadog-api.git")),
 
-  pgpPublicRing := file("./travis/local.pubring.asc"),
-  pgpSecretRing := file("./travis/local.secring.asc"),
-  releaseEarlyEnableSyncToMaven := false,
-  releaseEarlyWith := BintrayPublisher))
+  githubWorkflowPublishTargetBranches := Seq(RefPredicate.StartsWith(Ref.Tag("v"))),
+  githubWorkflowTargetTags ++= Seq("v*"),
+  githubWorkflowPublish := Seq(
+    WorkflowStep.Sbt(
+      List("ci-release"),
+      env = Map(
+        "PGP_PASSPHRASE" -> "${{ secrets.PGP_PASSPHRASE }}",
+        "PGP_SECRET" -> "${{ secrets.PGP_SECRET }}",
+        "SONATYPE_PASSWORD" -> "${{ secrets.SONATYPE_PASSWORD }}",
+        "SONATYPE_USERNAME" -> "${{ secrets.SONATYPE_USERNAME }}")))))
 
 def dependencies = List(
   "com.beachape" %% "enumeratum" % "1.5.13", //TODO consider removing
