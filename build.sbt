@@ -2,8 +2,8 @@ lazy val root = (project in file("."))
   .settings(
     name := "scala-datadog-api",
     organization := "com.supersonic",
-    scalaVersion := "2.12.6",
-    crossScalaVersions := List(scalaVersion.value, "2.11.12"),
+    scalaVersion := "2.13.10",
+    crossScalaVersions := List(scalaVersion.value, "2.12.6"),
     scalacOptions ++= List(
       "-encoding", "UTF-8",
       "-deprecation",
@@ -40,15 +40,15 @@ inThisBuild(List(
 
 def dependencies = List(
   "com.beachape" %% "enumeratum" % "1.5.13", //TODO consider removing
-  "com.softwaremill.sttp" %% "core" % "1.1.14",
-  "com.softwaremill.sttp" %% "circe" % "1.1.14"
+  "com.softwaremill.sttp" %% "core" % "1.7.2",
+  "com.softwaremill.sttp" %% "circe" % "1.7.2"
 ) ++ circeDependencies
 
 def testDependencies = List(
-  "org.scalatest" %% "scalatest" % "3.0.4" % "test")
+  "org.scalatest" %% "scalatest" % "3.2.15" % "test")
 
 def circeDependencies = {
-  val circeVersion = "0.11.1"
+  val circeVersion = "0.12.1"
 
   List(
     "io.circe" %% "circe-core",
