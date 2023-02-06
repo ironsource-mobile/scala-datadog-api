@@ -5,11 +5,12 @@ import com.supersonic.datadog.Graph.Series.SimpleSeries
 import com.supersonic.datadog.Graph._
 import com.supersonic.datadog.TimeboardJSON._
 import io.circe.syntax._
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class TimeboardJSONTest extends WordSpec with Matchers {
-  val host = TemplateVariable(name = "host", prefix = "host", default = Some("*"))
-  val env = TemplateVariable(name = "env", prefix = "environment", default = None)
+class TimeboardJSONTest extends AnyWordSpec with Matchers {
+  val host: TemplateVariable = TemplateVariable(name = "host", prefix = "host", default = Some("*"))
+  val env: TemplateVariable = TemplateVariable(name = "env", prefix = "environment", default = None)
 
   "Rendering a timeboard as JSON" should {
     "produce the correct JSON in the format expected by Datadog" in {
