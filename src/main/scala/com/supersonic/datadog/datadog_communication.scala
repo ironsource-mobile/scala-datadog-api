@@ -29,10 +29,10 @@ object AddTimeboardIfMissingResponse {
 object TimeboardCreateResponse {
   implicit val decoder: Decoder[TimeboardCreateResponse] = Decoder.instance { c =>
     for {
-      title <- c.downField("dash").downField("title").as[String].right
-      id <- c.downField("dash").downField("id").as[Int].right
-      url <- c.downField("url").as[String].right
-      resource <- c.downField("resource").as[String].right
+      title <- c.downField("dash").downField("title").as[String]
+      id <- c.downField("dash").downField("id").as[Int]
+      url <- c.downField("url").as[String]
+      resource <- c.downField("resource").as[String]
     } yield TimeboardCreateResponse(title = title, id = id, url = url, resource = resource)
   }
 }
@@ -40,10 +40,10 @@ object TimeboardCreateResponse {
 object TimeboardDescription {
   implicit val decoder: Decoder[TimeboardDescription] = Decoder.instance { c =>
     for {
-      title <- c.downField("title").as[String].right
-      description <- c.downField("description").as[Option[String]].right
-      id <- c.downField("id").as[String].right
-      resource <- c.downField("resource").as[String].right
+      title <- c.downField("title").as[String]
+      description <- c.downField("description").as[Option[String]]
+      id <- c.downField("id").as[String]
+      resource <- c.downField("resource").as[String]
     } yield TimeboardDescription(
       title = title,
       description = description.getOrElse(""),
@@ -54,14 +54,14 @@ object TimeboardDescription {
 
 object AllTimeboardsResponse {
   implicit val decoder: Decoder[AllTimeboardsResponse] = Decoder.instance { c =>
-    c.downField("dashes").as[List[TimeboardDescription]].right.map(AllTimeboardsResponse.apply)
+    c.downField("dashes").as[List[TimeboardDescription]].map(AllTimeboardsResponse.apply)
   }
 }
 
 object SimpleResponse {
   implicit val decoder: Decoder[SimpleResponse] = Decoder.instance { c =>
     for {
-      status <- c.downField("status").as[String].right
+      status <- c.downField("status").as[String]
     } yield SimpleResponse(status = status)
   }
 }

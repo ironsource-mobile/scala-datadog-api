@@ -3,7 +3,7 @@ lazy val root = (project in file("."))
     name := "scala-datadog-api",
     organization := "com.supersonic",
     scalaVersion := "2.13.10",
-    crossScalaVersions := List(scalaVersion.value, "2.12.6"),
+    crossScalaVersions := List(scalaVersion.value, "2.12.17"),
     scalacOptions ++= List(
       "-encoding", "UTF-8",
       "-deprecation",
@@ -12,9 +12,7 @@ lazy val root = (project in file("."))
       "-language:higherKinds",
       "-Xfatal-warnings",
       "-Ywarn-value-discard",
-      "-Xfuture",
-      "-Xlint",
-      "-Ypartial-unification"),
+      "-Xlint"),
     sonatypeCredentialHost := Sonatype.sonatype01,
     libraryDependencies ++= (dependencies ++ testDependencies),
     Compile / doc / sources := List.empty)

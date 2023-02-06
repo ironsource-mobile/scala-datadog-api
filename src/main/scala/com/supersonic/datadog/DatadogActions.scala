@@ -92,13 +92,12 @@ final class SttpDatadogActions[F[_]](httpBackend: SttpBackend[F, Nothing])
         .send()
     }
 
-  private def parseResponse[A: Decoder](maybeResponse: F[Response[Either[circe.Error, A]]]): F[A] = {
+  private def parseResponse[A: Decoder](maybeResponse: F[Response[Either[DeserializationError[circe.Error], A]]]): F[A] = {
     maybeResponse.flatMap { response =>
-      if (!Set(200, 202).contains(response.code)) monad.error[Either[circe.Error, A]](new BadStatusCode(response.code))
+      if (!Set(200, 202).contains(response.code)) monad.error[Either[DeserializationError[circe.Error], A]](new BadStatusCode(response.code))
       else response.body.fold(
-        reason => monad.error[Either[circe.Error, A]](new MissingBody(reason)),
+        reason => monad.error[Either[DeserializationError[circe.Error], A]](new MissingBody(reason)),
         s => monad.unit(s))
-
-    }.flatMap(_.fold(monad.error[A](_), monad.unit))
+    }.flatMap(_.fold(deserializationError => monad.error[A](deserializationError.error), monad.unit))
   }
 }

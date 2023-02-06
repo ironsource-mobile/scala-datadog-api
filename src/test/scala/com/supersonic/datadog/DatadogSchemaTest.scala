@@ -2,14 +2,16 @@ package com.supersonic.datadog
 
 import com.supersonic.datadog.Graph.EventOverlay
 import com.supersonic.datadog.Graph.EventOverlay.{EventFromTemplateVariable, EventName, EventSources, EventTag}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class DatadogSchemaTest extends WordSpec with Matchers {
 
-  val eventName = Some(EventName("event"))
-  val eventTag = Some(EventTag("tag-name", "tag-value"))
-  val eventTemplate = Some(EventFromTemplateVariable(TemplateVariable("test", "", None)))
-  val eventSources = Some(EventSources("source"))
+class DatadogSchemaTest extends AnyWordSpec with Matchers {
+
+  val eventName: Option[EventName] = Some(EventName("event"))
+  val eventTag: Option[EventTag] = Some(EventTag("tag-name", "tag-value"))
+  val eventTemplate: Option[EventFromTemplateVariable] = Some(EventFromTemplateVariable(TemplateVariable("test", "", None)))
+  val eventSources: Option[EventSources] = Some(EventSources("source"))
 
   "event overlay" should {
     "return the all event data" in {
