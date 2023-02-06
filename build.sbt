@@ -25,10 +25,10 @@ lazy val root = (project in file("."))
 sonatypeCredentialHost := Sonatype.sonatype01
 inThisBuild(List(
   organization := "com.supersonic",
-  homepage := Some(url("https://github.com/SupersonicAds/scala-datadog-api")),
+  homepage := Some(url("https://github.com/ironsource-mobile/scala-datadog-api")),
   licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
-  developers := List(Developer("SupersonicAds", "SupersonicAds", "SupersonicAds", url("https://github.com/SupersonicAds"))),
-  scmInfo := Some(ScmInfo(url("https://github.com/SupersonicAds/scala-datadog-api"), "scm:git:git@github.com:SupersonicAds/scala-datadog-api.git")),
+  developers := List(Developer("ironsource-mobile", "ironsource-mobile", "ironsource-mobile", url("https://github.com/ironsource-mobile"))),
+  scmInfo := Some(ScmInfo(url("https://github.com/ironsource-mobile/scala-datadog-api"), "scm:git:git@github.com:ironsource-mobile/scala-datadog-api.git")),
 
   githubWorkflowPublishTargetBranches := Seq(RefPredicate.StartsWith(Ref.Tag("v"))),
   githubWorkflowTargetTags ++= Seq("v*"),
