@@ -5,7 +5,8 @@ import io.circe.parser.parse
 
 object JSONTestUtil {
 
-  def unsafeParse(json: String): Json = parse(json).getOrElse(Json.Null) // because it's a test and guaranteed to succeed
+  // because it's a test and guaranteed to succeed
+  def unsafeParse(json: String): Json = parse(json).getOrElse(throw new Exception(s"Unable to parse json: $json"))
 
   val multipleSeriesWithMetadataExpectedJSON: Json = unsafeParse {
     s"""
