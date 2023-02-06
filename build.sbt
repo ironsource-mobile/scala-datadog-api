@@ -1,9 +1,14 @@
+
+val scala12 = "2.12.17"
+val scala13 = "2.13.10"
+val supportedScalaVersion = Seq(scala12, scala13)
+
 lazy val root = (project in file("."))
   .settings(
     name := "scala-datadog-api",
     organization := "com.supersonic",
-    scalaVersion := "2.13.10",
-    crossScalaVersions := List(scalaVersion.value, "2.12.17"),
+    scalaVersion := scala13,
+    crossScalaVersions := supportedScalaVersion,
     scalacOptions ++= List(
       "-encoding", "UTF-8",
       "-deprecation",
@@ -27,6 +32,7 @@ inThisBuild(List(
 
   githubWorkflowPublishTargetBranches := Seq(RefPredicate.StartsWith(Ref.Tag("v"))),
   githubWorkflowTargetTags ++= Seq("v*"),
+  githubWorkflowScalaVersions := supportedScalaVersion,
   githubWorkflowPublish := Seq(
     WorkflowStep.Sbt(
       List("ci-release"),
