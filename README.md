@@ -7,6 +7,6 @@ Currently supporting the definition and creation of [timeboards](https://docs.da
 ## Getting It
 
 ```scala
-libraryDependencies += "com.supersonic" %% "scala-datadog-api" % "0.3.5"
+libraryDependencies += "com.supersonic" %% "scala-datadog-api" % "0.3.6"
 ``` 
 
